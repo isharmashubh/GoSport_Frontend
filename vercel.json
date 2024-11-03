@@ -1,5 +1,9 @@
 {
   "version": 2,
   "builds": [{ "src": "server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/server.js" }]
+  "routes": [
+    { "src": "/(.*)", "dest": "/server.js" },
+    { "src": "/update-matches", "dest": "/server.js" },
+    { "src": "/directlyfile.html", "dest": "/public/directlyfile.html" }
+  ]
 }

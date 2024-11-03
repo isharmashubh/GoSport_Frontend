@@ -64,6 +64,17 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/directlyfile.html", (req, res) => {
+  const filePath = path.join(__dirname, "public", "directlyfile.html");
+  console.log(`Serving file for directlyfile page is : ${filePath}`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Error sending directlyfile.html:", err);
+      res.status(500).send("Error loading the page");
+    }
+  });
+});
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
