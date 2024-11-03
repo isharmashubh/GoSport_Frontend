@@ -45,12 +45,11 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-
-// Route to trigger JSON update
-app.get("/update-matches", async (req, res) => {
-  await updateMatchJSON();
-  res.send("Matches JSON updated");
-});
+await updateMatchJSON();
+// // Route to trigger JSON update
+// app.get("/update-matches", async (req, res) => {
+//   res.send("Matches JSON updated");
+// });
 
 // Serve the matchPlayer.html file as the default page
 app.get("/", (req, res) => {
