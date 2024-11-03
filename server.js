@@ -73,7 +73,7 @@ app.get("/", (req, res) => {
 app.get("/update-matches", async (req, res) => {
   try {
     console.log("I am inside update-matches endpoint");
-    await updateMatchJSON();
+    updateMatchJSON();
     res.status(200).send("Match data updated successfully in server.js.");
     console.log("I exit here update-matches endpoint");
   } catch (error) {
