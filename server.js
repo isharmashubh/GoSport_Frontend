@@ -7,10 +7,6 @@ require("dotenv").config();
 const Queue = require("bull");
 
 const app = express();
-app.use((req, res, next) => {
-  res.set("Cache-Control", "no-store"); // Prevent caching
-  next();
-});
 
 app.use(express.static("public")); // Serve static files
 app.use(cors());
