@@ -45,7 +45,7 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-await updateMatchJSON();
+updateMatchJSON();
 // // Route to trigger JSON update
 // app.get("/update-matches", async (req, res) => {
 //   res.send("Matches JSON updated");
