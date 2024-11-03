@@ -46,12 +46,6 @@ async function updateMatchJSON() {
   }
 }
 updateMatchJSON();
-// // Route to trigger JSON update
-// app.get("/update-matches", async (req, res) => {
-//   res.send("Matches JSON updated");
-// });
-
-// Serve the matchPlayer.html file as the default page
 app.get("/", (req, res) => {
   const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
   console.log(`Serving file for HTML page is : ${filePath}`);
