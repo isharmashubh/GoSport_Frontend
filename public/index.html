@@ -78,7 +78,7 @@
           if (!updateResponse.ok) {
             throw new Error("Failed to update match data.");
           }
-          console.log("Match data updated successfully.");
+          console.log("Match data updated successfully in index.html file.");
           const response = await fetch("matches.json"); // Ensure matches.json is available in the public folder
           console.log("Printing response here :----------");
           console.log(JSON.stringify(response));

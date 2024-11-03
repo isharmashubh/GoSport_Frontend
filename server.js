@@ -41,17 +41,17 @@ async function updateMatchJSON() {
   try {
     const matches = await Match.find();
     const jsonData = JSON.stringify(matches, null, 2);
-    console.log("Writing data inside matches.json");
+    console.log("Writing data inside matches.json in server.js");
     fs.writeFileSync(path.join(__dirname, "public/matches.json"), jsonData);
-    console.log("Match data written to matches.json");
+    console.log("Match data written to matches.json in server.js");
   } catch (error) {
     console.error("Error writing to JSON:", error);
   }
 }
 
-updateMatchJSON().catch((error) => {
-  console.error("Failed to update matches.json:", error);
-});
+// updateMatchJSON().catch((error) => {
+//   console.error("Failed to update matches.json:", error);
+// });
 // Route for the main page
 app.get("/", (req, res) => {
   // Update matches.json and log any errors but do not await it
@@ -71,7 +71,7 @@ app.get("/", (req, res) => {
 app.get("/update-matches", async (req, res) => {
   try {
     await updateMatchJSON();
-    res.status(200).send("Match data updated successfully.");
+    res.status(200).send("Match data updated successfully in server.js.");
   } catch (error) {
     res.status(500).send("Error updating match data.");
   }
