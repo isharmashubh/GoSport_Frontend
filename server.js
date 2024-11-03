@@ -45,31 +45,16 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-// updateMatchJSON();
-// app.get("/", (req, res) => {
-//   const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
-//   console.log(`Serving file for HTML page is : ${filePath}`);
-//   res.sendFile(filePath, (err) => {
-//     if (err) {
-//       console.error("Error sending matchPlayer.html:", err);
-//       res.status(500).send("Error loading the page");
-//     }
-//   });
-// });
-
-app.get("/", async (req, res) => {
-  try {
-    await updateMatchJSON(); // Update matches.json each time main page is loaded
-    const filePath = path.join(__dirname, "public", "matchPlayer.html");
-    console.log(`Serving file for HTML page: ${filePath}`);
-    res.sendFile(filePath);
-  } catch (err) {
-    console.error(
-      "Error updating match data or sending matchPlayer.html:",
-      err
-    );
-    res.status(500).send("Error loading the page");
-  }
+setInterval(updateMatchJSON, 5 * 60 * 1000);
+app.get("/", (req, res) => {
+  const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
+  console.log(`Serving file for HTML page is : ${filePath}`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error("Error sending matchPlayer.html:", err);
+      res.status(500).send("Error loading the page");
+    }
+  });
 });
 
 app.get("/directlyfile.html", (req, res) => {
