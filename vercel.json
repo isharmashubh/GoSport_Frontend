@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [{ "src": "server.js", "use": "@vercel/node" }],
   "routes": [
-    { "src": "/update-matches", "dest": "/server.js" },
+    { "src": "/update-matches", "methods": ["GET"], "dest": "/server.js" },
     { "src": "/index.html", "dest": "/public/index.html" },
     { "src": "/(.*)", "dest": "/server.js" }
   ]
