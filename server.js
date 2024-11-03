@@ -39,11 +39,13 @@ const Match = mongoose.model("Match", matchSchema);
 // Function to write match data to JSON
 async function updateMatchJSON() {
   try {
+    console.log("Currently i am inside updateMatchJSON function");
     const matches = await Match.find();
     const jsonData = JSON.stringify(matches, null, 2);
     console.log("Writing data inside matches.json in server.js");
     fs.writeFileSync(path.join(__dirname, "public/matches.json"), jsonData);
     console.log("Match data written to matches.json in server.js");
+    console.log("I exit updateMatchJSON function here");
   } catch (error) {
     console.error("Error writing to JSON:", error);
   }
@@ -70,8 +72,10 @@ app.get("/", (req, res) => {
 
 app.get("/update-matches", async (req, res) => {
   try {
+    console.log("I am inside update-matches endpoint");
     await updateMatchJSON();
     res.status(200).send("Match data updated successfully in server.js.");
+    console.log("I exit here update-matches endpoint");
   } catch (error) {
     res.status(500).send("Error updating match data.");
   }
