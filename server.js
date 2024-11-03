@@ -45,7 +45,7 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-updateMatchJSON();
+// updateMatchJSON();
 // app.get("/", (req, res) => {
 //   const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
 //   console.log(`Serving file for HTML page is : ${filePath}`);
