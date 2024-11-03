@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
@@ -36,62 +35,33 @@ const matchSchema = new mongoose.Schema({
 
 const Match = mongoose.model("Match", matchSchema);
 
-// Function to write match data to JSON
-async function updateMatchJSON() {
-  try {
-    console.log("Currently i am inside updateMatchJSON function");
-    const matches = await Match.find();
-    const jsonData = JSON.stringify(matches, null, 2);
-    console.log(`JsonData i got is -----> ${jsonData}`);
-    console.log("Writing data inside matches.json in server.js");
-    fs.writeFileSync(path.join(__dirname, "public/matches.json"), jsonData);
-    console.log("Match data written to matches.json in server.js");
-    console.log("I exit updateMatchJSON function here");
-  } catch (error) {
-    console.error("Error writing to JSON:", error);
-  }
-}
-
-// updateMatchJSON().catch((error) => {
-//   console.error("Failed to update matches.json:", error);
-// });
-// Route for the main page
-app.get("/", (req, res) => {
-  // Update matches.json and log any errors but do not await it
-  updateMatchJSON().catch((error) => {
-    console.error("Failed to update matches.json:", error);
-  });
-  const filePath = path.join(__dirname, "public", "index.html");
+// Serve HTML files
+const serveHtmlFile = (fileName, res) => {
+  const filePath = path.join(__dirname, "public", fileName);
   console.log(`Serving file for HTML page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error("Error sending index.html:", err);
-      res.status(500).send("Error loading the page");
+      console.error(`Error sending ${fileName}:`, err);
+      res.status(500).send(`Error loading the page: ${fileName}`);
     }
   });
-});
+};
 
-app.get("/update-matches", async (req, res) => {
+// Route for the main page
+app.get("/", (req, res) => serveHtmlFile("index.html", res));
+
+// Fetch matches from the database
+app.get("/matches", async (req, res) => {
   try {
-    console.log("I am inside update-matches endpoint");
-    updateMatchJSON();
-    res.status(200).send("Match data updated successfully in server.js.");
-    console.log("I exit here update-matches endpoint");
+    const matches = await Match.find();
+    res.json(matches);
   } catch (error) {
-    res.status(500).send("Error updating match data.");
+    res.status(500).send("Error fetching matches from the database.");
   }
 });
-// Route for another HTML file
-app.get("/index.html", (req, res) => {
-  const filePath = path.join(__dirname, "public", "index.html");
-  console.log(`Serving file for index page is: ${filePath}`);
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error("Error sending index.html:", err);
-      res.status(500).send("Error loading the page");
-    }
-  });
-});
+
+// Route for index.html (Optional, if you want to keep it separate)
+app.get("/index.html", (req, res) => serveHtmlFile("index.html", res));
 
 // Start the server
 const PORT = process.env.PORT || 3000;
