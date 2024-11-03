@@ -41,6 +41,7 @@ async function updateMatchJSON() {
   try {
     const matches = await Match.find();
     const jsonData = JSON.stringify(matches, null, 2);
+    console.log("Writing data inside matches.json");
     fs.writeFileSync(path.join(__dirname, "public/matches.json"), jsonData);
     console.log("Match data written to matches.json");
   } catch (error) {
