@@ -45,8 +45,9 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-setInterval(updateMatchJSON, 5 * 60 * 1000);
+// setInterval(updateMatchJSON, 5 * 60 * 1000);
 app.get("/", (req, res) => {
+  updateMatchJSON();
   const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
   console.log(`Serving file for HTML page is : ${filePath}`);
   res.sendFile(filePath, (err) => {
