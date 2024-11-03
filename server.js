@@ -6,6 +6,11 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+app.use((req, res, next) => {
+  res.set("Cache-Control", "no-store"); // Prevent caching
+  next();
+});
+
 app.use(express.static("public")); // Serve static files
 app.use(cors());
 // MongoDB connection function
