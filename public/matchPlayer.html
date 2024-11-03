@@ -70,6 +70,24 @@
     <div id="match-details-container"></div>
 
     <script>
+      async function updateMatchJSON() {
+        try {
+          const matches = await Match.find();
+          const jsonData = JSON.stringify(matches, null, 2);
+          console.log("Writing data inside matches.json");
+          fs.writeFileSync(
+            path.join(__dirname, "public/matches.json"),
+            jsonData
+          );
+          console.log("Match data written to matches.json");
+        } catch (error) {
+          console.error("Error writing to JSON:", error);
+        }
+      }
+
+      updateMatchJSON().catch((error) => {
+        console.error("Failed to update matches.json:", error);
+      });
       async function fetchMatchDetails() {
         try {
           const response = await fetch("matches.json"); // Ensure matches.json is available in the public folder
