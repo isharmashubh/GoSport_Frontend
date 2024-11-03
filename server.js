@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
+const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
@@ -36,25 +36,19 @@ const matchSchema = new mongoose.Schema({
 
 const Match = mongoose.model("Match", matchSchema);
 
-// Function to write match data to JSON
-async function updateMatchJSON() {
+// Route for the main page
+app.get("/", async (req, res) => {
   try {
     const matches = await Match.find();
     const jsonData = JSON.stringify(matches, null, 2);
-    fs.writeFileSync(path.join(__dirname, "public/matches.json"), jsonData);
+    await fs.promises.writeFile(
+      path.join(__dirname, "public/matches.json"),
+      jsonData
+    );
     console.log("Match data written to matches.json");
   } catch (error) {
     console.error("Error writing to JSON:", error);
   }
-}
-
-// Route for the main page
-app.get("/", (req, res) => {
-  // Update matches.json and log any errors but do not await it
-  updateMatchJSON().catch((error) => {
-    console.error("Failed to update matches.json:", error);
-  });
-
   const filePath = path.join(__dirname, "public", "matchPlayer.html");
   console.log(`Serving file for HTML page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
