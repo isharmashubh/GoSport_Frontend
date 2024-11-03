@@ -11,25 +11,14 @@
     "__v": 0
   },
   {
-    "_id": "67272dcf78b2ea40d4853f71",
+    "_id": "6727438753f69f3db545dd4c",
     "name": "Bulgaria Women vs Malta Women",
-    "startTime": "2024-11-03T07:30:00.000Z",
+    "startTime": "2024-11-03T09:30:00.000Z",
     "venue": "Marsa Sports Club, Marsa, Malta",
     "tour": "ECI-W Malta-Bulgaria, 2024",
-    "scorecard": "Projected score: 60 @ 6.0 RPO",
-    "link": "https://www.fancode.com/cricket/matches/eciw-maltabulgaria-2024/bulgaria-women-vs-malta-women/commentary/112388",
-    "m3u8link": "https://dai.fancode.com/primary/112388_english_hls_8033ta-no/1080p.m3u8",
-    "__v": 0
-  },
-  {
-    "_id": "67272dcf78b2ea40d4853f73",
-    "name": "South Africa vs United Arab Emirates",
-    "startTime": "2024-11-03T07:25:00.000Z",
-    "venue": "Mission Road Ground, Mong Kok",
-    "tour": "Hong Kong Sixes, 2024",
-    "scorecard": "UAE elected to field",
-    "link": "https://www.fancode.com/cricket/matches/hong-kong-sixes-2024/south-africa-vs-united-arab-emirates/commentary/111924",
-    "m3u8link": "https://dai.fancode.com/primary/111924_english_hls_5284ta-di/1080p.m3u8",
+    "scorecard": "Malta Women won the toss and elected to field",
+    "link": "https://www.fancode.com/cricket/matches/eciw-maltabulgaria-2024/bulgaria-women-vs-malta-women/commentary/112389",
+    "m3u8link": "https://dai.fancode.com/primary/112389_english_hls_5169ta-no/1080p.m3u8",
     "__v": 0
   }
 ]

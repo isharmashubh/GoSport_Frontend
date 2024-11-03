@@ -72,9 +72,7 @@
     <script>
       async function fetchMatchDetails() {
         try {
-          const response = await fetch(
-            `matches.json?t=${new Date().getTime()}`
-          ); // Ensure matches.json is available in the public folder
+          const response = await fetch(`matches.json}`); // Ensure matches.json is available in the public folder
           if (!response.ok) {
             throw new Error("Failed to load match details.");
           }
