@@ -63,10 +63,20 @@
         font-size: 0.9em;
         color: #555;
       }
+      #loading {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 1.5em;
+        color: #333;
+      }
+      #match-details-container {
+        display: none; /* Initially hide the match details container */
+      }
     </style>
   </head>
   <body>
     <h1>Match Details</h1>
+    <div id="loading">Loading match details, please wait...</div>
     <div id="match-details-container"></div>
 
     <script>
@@ -114,6 +124,9 @@
 
             container.appendChild(matchCard);
           });
+          // Hide the loading message and show the match details container
+          document.getElementById("loading").style.display = "none";
+          container.style.display = "flex"; // Show the match details container
         } catch (error) {
           console.error("Error fetching the match details:", error);
         }
