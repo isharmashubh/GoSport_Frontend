@@ -4,12 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
-const Queue = require("bull");
 
 const app = express();
 
 app.use(express.static("public")); // Serve static files
 app.use(cors());
+
 // MongoDB connection function
 async function connectToDatabase() {
   const uri = process.env.MONGODB_URI;
@@ -47,11 +47,16 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
-// setInterval(updateMatchJSON, 5 * 60 * 1000);
+
+// Route for the main page
 app.get("/", (req, res) => {
-  updateMatchJSON();
-  const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
-  console.log(`Serving file for HTML page is : ${filePath}`);
+  // Update matches.json and log any errors but do not await it
+  updateMatchJSON().catch((error) => {
+    console.error("Failed to update matches.json:", error);
+  });
+
+  const filePath = path.join(__dirname, "public", "matchPlayer.html");
+  console.log(`Serving file for HTML page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
     if (err) {
       console.error("Error sending matchPlayer.html:", err);
@@ -60,9 +65,10 @@ app.get("/", (req, res) => {
   });
 });
 
+// Route for another HTML file
 app.get("/directlyfile.html", (req, res) => {
   const filePath = path.join(__dirname, "public", "directlyfile.html");
-  console.log(`Serving file for directlyfile page is : ${filePath}`);
+  console.log(`Serving file for directlyfile page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
     if (err) {
       console.error("Error sending directlyfile.html:", err);
