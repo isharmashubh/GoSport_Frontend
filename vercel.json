@@ -4,6 +4,6 @@
   "routes": [
     { "src": "/(.*)", "dest": "/server.js" },
     { "src": "/update-matches", "dest": "/server.js" },
-    { "src": "/directlyfile.html", "dest": "/public/directlyfile.html" }
+    { "src": "/index.html", "dest": "/public/index.html" }
   ]
 }

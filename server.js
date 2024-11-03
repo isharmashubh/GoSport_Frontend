@@ -58,23 +58,31 @@ app.get("/", (req, res) => {
   updateMatchJSON().catch((error) => {
     console.error("Failed to update matches.json:", error);
   });
-  const filePath = path.join(__dirname, "public", "matchPlayer.html");
+  const filePath = path.join(__dirname, "public", "index.html");
   console.log(`Serving file for HTML page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error("Error sending matchPlayer.html:", err);
+      console.error("Error sending index.html:", err);
       res.status(500).send("Error loading the page");
     }
   });
 });
 
+app.get("/update-matches", async (req, res) => {
+  try {
+    await updateMatchJSON();
+    res.status(200).send("Match data updated successfully.");
+  } catch (error) {
+    res.status(500).send("Error updating match data.");
+  }
+});
 // Route for another HTML file
-app.get("/directlyfile.html", (req, res) => {
-  const filePath = path.join(__dirname, "public", "directlyfile.html");
-  console.log(`Serving file for directlyfile page is: ${filePath}`);
+app.get("/index.html", (req, res) => {
+  const filePath = path.join(__dirname, "public", "index.html");
+  console.log(`Serving file for index page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
     if (err) {
-      console.error("Error sending directlyfile.html:", err);
+      console.error("Error sending index.html:", err);
       res.status(500).send("Error loading the page");
     }
   });

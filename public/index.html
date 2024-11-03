@@ -72,6 +72,13 @@
     <script>
       async function fetchMatchDetails() {
         try {
+          console.log("UpdaTING DATA IN MATCHES.JSON");
+          const updateResponse = await fetch("/update-matches");
+          console.log("UpdaTED DATA IN MATCHES.JSON");
+          if (!updateResponse.ok) {
+            throw new Error("Failed to update match data.");
+          }
+          console.log("Match data updated successfully.");
           const response = await fetch("matches.json"); // Ensure matches.json is available in the public folder
           console.log("Printing response here :----------");
           console.log(JSON.stringify(response));

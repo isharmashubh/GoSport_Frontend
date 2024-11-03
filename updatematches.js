@@ -17,12 +17,15 @@ async function updateMatchJSON() {
     const jsonData = JSON.stringify(matches, null, 2);
     console.log("Writing data inside matches.json");
     fs.writeFileSync(path.join(__dirname, "matches.json"), jsonData);
+    console.log(
+      `Writing to file path ---->    ${path.join(__dirname, "matches.json")} `
+    );
     console.log("Match data written to matches.json");
   } catch (error) {
     console.error("Error writing to JSON:", error);
   }
 }
 
-updateMatchJSON().catch((error) => {
-  console.error("Failed to update matches.json:", error);
-});
+window.onload = function () {
+  updateMatchJSON();
+};
