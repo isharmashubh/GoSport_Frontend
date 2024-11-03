@@ -47,13 +47,16 @@ async function updateMatchJSON() {
     console.error("Error writing to JSON:", error);
   }
 }
+
 updateMatchJSON().catch((error) => {
   console.error("Failed to update matches.json:", error);
 });
 // Route for the main page
 app.get("/", (req, res) => {
   // Update matches.json and log any errors but do not await it
-
+  updateMatchJSON().catch((error) => {
+    console.error("Failed to update matches.json:", error);
+  });
   const filePath = path.join(__dirname, "public", "matchPlayer.html");
   console.log(`Serving file for HTML page is: ${filePath}`);
   res.sendFile(filePath, (err) => {
