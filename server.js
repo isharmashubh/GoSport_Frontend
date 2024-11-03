@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
+const Queue = require("bull");
 
 const app = express();
 app.use((req, res, next) => {
@@ -51,8 +52,8 @@ async function updateMatchJSON() {
   }
 }
 // setInterval(updateMatchJSON, 5 * 60 * 1000);
-app.get("/", async (req, res) => {
-  await updateMatchJSON();
+app.get("/", (req, res) => {
+  updateMatchJSON();
   const filePath = path.join(__dirname, "public", "matchPlayer.html"); // Move up one level from Api folder
   console.log(`Serving file for HTML page is : ${filePath}`);
   res.sendFile(filePath, (err) => {
