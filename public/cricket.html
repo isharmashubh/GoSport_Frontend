@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match Details</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      h1 {
+        text-align: center;
+        color: #333;
+        margin: 20px 0;
+        font-size: 2.5em;
+        font-weight: 300;
+      }
+      #match-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+      .match-details-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 10px 0;
+        padding: 20px;
+        width: 90%;
+        max-width: 800px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .match-details-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      .match-details-card h2 {
+        margin: 0;
+        font-size: 1.8em;
+        color: #1e90ff;
+      }
+      .match-details-card p {
+        margin: 8px 0;
+        font-size: 1em;
+      }
+      .match-details-card a {
+        color: #1e90ff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Match Details</h1>
+    <div id="loading">Loading match details, please wait...</div>
+    <div id="match-details-container" style="display: none"></div>
+
+    <script>
+      async function fetchMatchDetails() {
+        try {
+          const response = await fetch("/cricketMatches");
+          if (!response.ok) throw new Error("Failed to load match details.");
+          const data = await response.json();
+
+          const container = document.getElementById("match-details-container");
+          container.innerHTML = "";
+          data.forEach((match) => {
+            if (!match.m3u8link) return;
+            const matchCard = document.createElement("div");
+            matchCard.className = "match-details-card";
+            matchCard.innerHTML = `
+              <h2>${match.name}</h2>
+              <p><strong>Start Time:</strong> ${new Date(
+                match.startTime
+              ).toLocaleString()}</p>
+              <p><strong>Venue:</strong> ${match.venue}</p>
+              <p><strong>Tour:</strong> ${match.tour}</p>
+              <p><strong>Scorecard:</strong> ${match.scorecard}</p>
+              <p><a href="#" onclick="handleWatchLiveClick('${
+                match.m3u8link
+              }', '${match.name}')">Watch Live</a></p>
+            `;
+            container.appendChild(matchCard);
+          });
+          document.getElementById("loading").style.display = "none";
+          container.style.display = "flex";
+        } catch (error) {
+          console.error("Error fetching the match details:", error);
+        }
+      }
+
+      function handleWatchLiveClick(link, matchName) {
+        localStorage.setItem("currentMatchName", matchName);
+        window.location.href = `directlyfile.html?url=${link}`;
+      }
+
+      window.onload = fetchMatchDetails;
+    </script>
+  </body>
+</html>

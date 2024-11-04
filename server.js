@@ -9,7 +9,7 @@ const app = express();
 app.use(express.static("public")); // Serve static files
 app.use(cors());
 
-// MongoDB connection function
+// MongoDB connection
 async function connectToDatabase() {
   const uri = process.env.MONGODB_URI;
   try {
@@ -23,51 +23,64 @@ async function connectToDatabase() {
 // Call the database connection function
 connectToDatabase();
 
-// Match Schema
-const matchSchema = new mongoose.Schema({
+// Match Schemas
+const cricketMatchSchema = new mongoose.Schema({
   name: String,
-  startTime: Date,
+  startTime: String,
   venue: String,
   tour: String,
   scorecard: String,
+  link: String,
   m3u8link: String,
 });
 
-const Match = mongoose.model("Match", matchSchema);
+const footballMatchSchema = new mongoose.Schema({
+  name: String,
+  startTime: String,
+  venue: String,
+  tour: String,
+  link: String,
+  m3u8link: String,
+});
 
-// Serve HTML files
-const serveHtmlFile = (fileName, res) => {
-  const filePath = path.join(__dirname, "public", fileName);
-  console.log(`Serving file for HTML page is: ${filePath}`);
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error(`Error sending ${fileName}:`, err);
-      res.status(500).send(`Error loading the page: ${fileName}`);
-    }
-  });
-};
+const cricketMatch = mongoose.model("cricketMatch", cricketMatchSchema);
+const footballMatch = mongoose.model("footballMatch", footballMatchSchema);
 
 // Route for the main page
-app.get("/", (req, res) => serveHtmlFile("index.html", res));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-// Fetch matches from the database
-app.get("/matches", async (req, res) => {
+// Fetch cricket and football matches from the database
+app.get("/cricketMatches", async (req, res) => {
   try {
-    const matches = await Match.find();
+    const matches = await cricketMatch.find();
     res.json(matches);
   } catch (error) {
     res.status(500).send("Error fetching matches from the database.");
   }
 });
 
-// Route for index.html (Optional, if you want to keep it separate)
-app.get("/index.html", (req, res) => serveHtmlFile("index.html", res));
+app.get("/footballMatches", async (req, res) => {
+  try {
+    const matches = await footballMatch.find();
+    res.json(matches);
+  } catch (error) {
+    res.status(500).send("Error fetching matches from the database.");
+  }
+});
+
+// Serve other HTML pages
+app.get("/cricket.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "cricket.html"));
+});
+
+app.get("/football.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "football.html"));
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// Export the app as a module
-module.exports = app;

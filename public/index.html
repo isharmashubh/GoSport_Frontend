@@ -3,154 +3,97 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Match Details</title>
+    <title>Fancode for Free</title>
     <style>
+      /* Body styling */
       body {
         font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
         margin: 0;
         padding: 0;
-        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #1e3c72, #2a5298, #57c7d4);
+        color: #fff;
+        flex-direction: column;
       }
+
       h1 {
-        text-align: center;
-        color: #333;
-        margin: 20px 0;
+        color: #ffffff;
         font-size: 2.5em;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
         font-weight: 300;
       }
-      #match-details-container {
+
+      /* Container for clickable images */
+      .image-container {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
+        gap: 60px;
+        justify-content: center;
       }
-      .match-details-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin: 10px 0;
-        padding: 20px;
-        width: 90%;
-        max-width: 800px;
+
+      /* Card styling */
+      .card {
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .match-details-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-      .match-details-card h2 {
-        margin: 0;
-        font-size: 1.8em;
-        color: #1e90ff;
-      }
-      .match-details-card p {
-        margin: 8px 0;
-        font-size: 1em;
-      }
-      .match-details-card a {
-        color: #1e90ff;
-        text-decoration: none;
-        font-weight: bold;
-        transition: color 0.3s ease;
-      }
-      .match-details-card a:hover {
-        color: #0056b3;
-      }
-      .match-details-card .details {
-        margin: 10px 0;
-        font-size: 0.9em;
-        color: #555;
-      }
-      #loading {
+        cursor: pointer;
         text-align: center;
-        margin-top: 50px;
-        font-size: 1.5em;
-        color: #333;
+        width: 260px; /* Increased width */
       }
-      #match-details-container {
-        display: none; /* Initially hide the match details container */
+
+      .card:hover {
+        transform: translateY(-8px) scale(1.05) rotate(-1deg);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Image styling */
+      .card img {
+        width: 140px; /* Increased image width */
+        height: auto;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover img {
+        transform: scale(1.1);
+      }
+
+      .card-title {
+        color: #ffffff;
+        font-size: 1.4em;
+        margin-top: 8px;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
       }
     </style>
   </head>
   <body>
-    <h1>Match Details</h1>
-    <div id="loading">Loading match details, please wait...</div>
-    <div id="match-details-container"></div>
+    <h1>What do you wanna watch ?</h1>
+
+    <div class="image-container">
+      <!-- Cricket Card -->
+      <div class="card" onclick="redirectTo('cricket.html')">
+        <img src="cricket.jpg" alt="Cricket Matches" />
+        <div class="card-title">Cricket Matches</div>
+      </div>
+
+      <!-- Football Card -->
+      <div class="card" onclick="redirectTo('football.html')">
+        <img src="football.jpg" alt="Football Matches" />
+        <div class="card-title">Football Matches</div>
+      </div>
+    </div>
 
     <script>
-      async function fetchMatchDetails() {
-        try {
-          const response = await fetch("/matches");
-
-          // Check if the response is okay (status 200-299)
-          if (!response.ok) {
-            throw new Error("Failed to load match details.");
-          }
-          if (!response.ok) {
-            throw new Error("Failed to load match details.");
-          }
-          const data = await response.json();
-          console.log("Fetched match details:", data);
-          console.log(
-            `Printing data here : ---------   ${JSON.stringify(data)}`
-          );
-          const container = document.getElementById("match-details-container");
-          console.log(`Printing container here : ---------   ${container}`);
-          container.innerHTML = ""; // Clear any existing content
-
-          data.forEach((match) => {
-            // Check if m3u8link exists; if not, skip this match
-            if (!match.m3u8link) return;
-
-            const matchCard = document.createElement("div");
-            matchCard.className = "match-details-card";
-
-            // Use m3u8link as it exists for "Watch Live" link
-            const watchLiveLink = match.m3u8link;
-
-            matchCard.innerHTML = `
-    <h2>${match.name}</h2>
-    <div class="details">
-      <p><strong>Start Time:</strong> ${new Date(
-        match.startTime
-      ).toLocaleString()}</p>
-      <p><strong>Venue:</strong> ${match.venue}</p>
-      <p><strong>Tour:</strong> ${match.tour}</p>
-      <p><strong>Scorecard:</strong> ${match.scorecard}</p>
-    </div>
-    <p><a href="#" onclick="handleWatchLiveClick('${watchLiveLink}', '${
-              match.name
-            }')">Watch Live</a></p>
-  `;
-
-            container.appendChild(matchCard);
-          });
-
-          // Hide the loading message and show the match details container
-          document.getElementById("loading").style.display = "none";
-          container.style.display = "flex"; // Show the match details container
-        } catch (error) {
-          console.error("Error fetching the match details:", error);
-        }
+      function redirectTo(route) {
+        window.location.href = route;
       }
-
-      function handleWatchLiveClick(link, matchName) {
-        // Store the match name in localStorage
-        localStorage.setItem("currentMatchName", matchName);
-
-        if (link.endsWith(".m3u8")) {
-          // Redirect to directlyfile.html with the m3u8 link as a query parameter
-          window.location.href = `directlyfile.html?url=${link}`;
-        } else {
-          // Open the link in a new tab
-          window.open(link, "_blank");
-        }
-      }
-
-      // Fetch the match details when the page loads
-      window.onload = fetchMatchDetails;
     </script>
   </body>
 </html>
