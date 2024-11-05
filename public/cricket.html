@@ -82,9 +82,10 @@
               <p><strong>Venue:</strong> ${match.venue}</p>
               <p><strong>Tour:</strong> ${match.tour}</p>
               <p><strong>Scorecard:</strong> ${match.scorecard}</p>
-              <p><a href="javascript:void(0);" onclick="handleWatchLiveClick('${watchLiveLink}', '${
-              match.name
-            }')">Watch Live</a></p>
+              <p><a href="javascript:void(0);" onclick="handleWatchLiveClick('${
+                match.m3u8link
+              }', '${match.name}')">Watch Live</a></p>
+
             `;
             container.appendChild(matchCard);
           });
