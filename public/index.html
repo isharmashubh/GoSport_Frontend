@@ -13,10 +13,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        flex-direction: column;
+        min-height: 100vh;
         background: linear-gradient(135deg, #1e3c72, #2a5298, #57c7d4);
         color: #fff;
-        flex-direction: column;
       }
 
       h1 {
@@ -25,13 +25,16 @@
         margin-bottom: 40px;
         text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
         font-weight: 300;
+        text-align: center;
       }
 
       /* Container for clickable images */
       .image-container {
         display: flex;
-        gap: 60px;
+        flex-wrap: wrap;
+        gap: 30px; /* Adjusted gap for better spacing */
         justify-content: center;
+        padding: 0 20px; /* Added padding for mobile */
       }
 
       /* Card styling */
@@ -39,12 +42,13 @@
         background-color: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 30px;
+        padding: 20px; /* Reduced padding */
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
         text-align: center;
-        width: 260px; /* Increased width */
+        width: 200px; /* Default width */
+        max-width: 90%; /* Ensures cards fit on smaller screens */
       }
 
       .card:hover {
@@ -54,7 +58,7 @@
 
       /* Image styling */
       .card img {
-        width: 140px; /* Increased image width */
+        width: 100%; /* Make images responsive */
         height: auto;
         margin-bottom: 15px;
         border-radius: 10px;
@@ -71,10 +75,30 @@
         margin-top: 8px;
         text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
       }
+
+      /* Responsive Styles */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2em; /* Smaller font size for mobile */
+        }
+
+        .card {
+          width: 90%; /* Cards take full width on small screens */
+          padding: 15px; /* Adjust padding for smaller screens */
+        }
+
+        .image-container {
+          gap: 20px; /* Adjusted gap for better spacing */
+        }
+
+        .card-title {
+          font-size: 1.2em; /* Smaller title for mobile */
+        }
+      }
     </style>
   </head>
   <body>
-    <h1>What do you wanna watch ?</h1>
+    <h1>What do you wanna watch?</h1>
 
     <div class="image-container">
       <!-- Cricket Card -->
