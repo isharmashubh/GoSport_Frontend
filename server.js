@@ -71,12 +71,12 @@ app.get("/footballMatches", async (req, res) => {
 });
 
 // Serve other HTML pages
-app.get("/cricket.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "cricket.html"));
+app.get("/cricket.html", async (req, res) => {
+  await res.sendFile(path.join(__dirname, "public", "cricket.html"));
 });
 
-app.get("/football.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "football.html"));
+app.get("/football.html", async (req, res) => {
+  await res.sendFile(path.join(__dirname, "public", "football.html"));
 });
 
 // Start the server
