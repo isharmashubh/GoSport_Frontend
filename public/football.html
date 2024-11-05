@@ -83,7 +83,7 @@
       async function fetchMatchDetails() {
         try {
           const response = await fetch("footballMatches");
-            
+
           if (!response.ok) {
             throw new Error("Failed to load match details.");
           }
@@ -109,7 +109,6 @@
                 ).toLocaleString()}</p>
                 <p><strong>Venue:</strong> ${match.venue}</p>
                 <p><strong>Tour:</strong> ${match.tour}</p>
-                <p><strong>Scorecard:</strong> ${match.scorecard}</p>
               </div>
               <p><a href="#" onclick="handleWatchLiveClick('${watchLiveLink}', '${
               match.name
