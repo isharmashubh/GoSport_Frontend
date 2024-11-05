@@ -2,8 +2,9 @@
   "version": 2,
   "builds": [{ "src": "server.js", "use": "@vercel/node" }],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/server.js" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/server.js" }
-  ]
+    { "src": "/index.html", "dest": "/public/index.html" },
+    { "src": "/cricket.html", "dest": "/public/cricket.html" },
+    { "src": "/football.html", "dest": "/public/football.html" },
+    { "src": "/", "dest": "/server.js" },
+    { "src": "/(.*)", "dest": "/public/$1" }
 }
