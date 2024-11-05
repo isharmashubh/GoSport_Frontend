@@ -84,13 +84,15 @@
           font-size: 2em; /* Smaller font size for mobile */
         }
 
-        .card {
-          width: 90%; /* Cards take full width on small screens */
-          padding: 15px; /* Adjust padding for smaller screens */
+        .image-container {
+          flex-direction: column; /* Stack cards vertically on mobile */
+          align-items: center; /* Center align the cards */
         }
 
-        .image-container {
-          gap: 15px; /* Adjusted gap for better spacing */
+        .card {
+          width: 100%; /* Cards take full width on small screens */
+          max-width: none; /* Disable max-width for mobile */
+          padding: 15px; /* Adjust padding for smaller screens */
         }
 
         .card-title {
