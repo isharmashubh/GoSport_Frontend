@@ -70,11 +70,22 @@
 
           const container = document.getElementById("match-details-container");
           container.innerHTML = "";
-          data.forEach((match) => {
-            if (!match.m3u8link) return;
-            const matchCard = document.createElement("div");
-            matchCard.className = "match-details-card";
-            matchCard.innerHTML = `
+          // Check if there are any matches available
+          if (data.length === 0) {
+            // Create a "No Match Available" card
+            const noMatchCard = document.createElement("div");
+            noMatchCard.className = "match-details-card";
+            noMatchCard.innerHTML = `
+              <h2>No Match Available</h2>
+              <p>Currently, there are no live matches to display.</p>
+            `;
+            container.appendChild(noMatchCard);
+          } else {
+            data.forEach((match) => {
+              if (!match.m3u8link) return;
+              const matchCard = document.createElement("div");
+              matchCard.className = "match-details-card";
+              matchCard.innerHTML = `
               <h2>${match.name}</h2>
               <p><strong>Start Time:</strong> ${new Date(
                 match.startTime
@@ -87,8 +98,9 @@
               }', '${match.name}')">Watch Live</a></p>
 
             `;
-            container.appendChild(matchCard);
-          });
+              container.appendChild(matchCard);
+            });
+          }
           document.getElementById("loading").style.display = "none";
           container.style.display = "flex";
         } catch (error) {

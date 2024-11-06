@@ -93,31 +93,42 @@
           const container = document.getElementById("match-details-container");
           container.innerHTML = ""; // Clear any existing content
 
-          data.forEach((match) => {
-            if (!match.m3u8link) return;
-
-            const matchCard = document.createElement("div");
-            matchCard.className = "match-details-card";
-
-            const watchLiveLink = match.m3u8link;
-
-            matchCard.innerHTML = `
-              <h2>${match.name}</h2>
-              <div class="details">
-                <p><strong>Start Time:</strong> ${new Date(
-                  match.startTime
-                ).toLocaleString()}</p>
-                <p><strong>Venue:</strong> ${match.venue}</p>
-                <p><strong>Tour:</strong> ${match.tour}</p>
-              </div>
-              <p><a href="javascript:void(0);" onclick="handleWatchLiveClick('${
-                match.m3u8link
-              }', '${match.name}')">Watch Live</a></p>
-
+          // Check if there are any matches available
+          if (data.length === 0) {
+            // Create a "No Match Available" card
+            const noMatchCard = document.createElement("div");
+            noMatchCard.className = "match-details-card";
+            noMatchCard.innerHTML = `
+              <h2>No Match Available</h2>
+              <p>Currently, there are no live matches to display.</p>
             `;
+            container.appendChild(noMatchCard);
+          } else {
+            data.forEach((match) => {
+              if (!match.m3u8link) return;
 
-            container.appendChild(matchCard);
-          });
+              const matchCard = document.createElement("div");
+              matchCard.className = "match-details-card";
+
+              const watchLiveLink = match.m3u8link;
+
+              matchCard.innerHTML = `
+                <h2>${match.name}</h2>
+                <div class="details">
+                  <p><strong>Start Time:</strong> ${new Date(
+                    match.startTime
+                  ).toLocaleString()}</p>
+                  <p><strong>Venue:</strong> ${match.venue}</p>
+                  <p><strong>Tour:</strong> ${match.tour}</p>
+                </div>
+                <p><a href="javascript:void(0);" onclick="handleWatchLiveClick('${
+                  match.m3u8link
+                }', '${match.name}')">Watch Live</a></p>
+              `;
+
+              container.appendChild(matchCard);
+            });
+          }
 
           document.getElementById("loading").style.display = "none";
           container.style.display = "flex"; // Show the match details container
