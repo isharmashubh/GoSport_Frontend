@@ -22,29 +22,41 @@
         width: 100%;
         height: 100%;
         display: flex;
-        align-items: center; /* Center-align the video vertically */
+        align-items: center;
         justify-content: center;
         padding-top: 10px;
       }
 
       #video-player {
         width: 100%;
-        height: 100%; /* Ensure the video covers the container */
-        object-fit: contain; /* Ensure the entire video is visible without cropping */
-        background-color: black; /* Add a black background to fill any empty space */
+        height: 100%;
+        object-fit: contain;
+        background-color: black;
+      }
+
+      #playButton {
+        position: absolute;
+        background-color: #ffffff;
+        border: none;
+        padding: 15px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 10;
       }
     </style>
   </head>
   <body>
     <div id="video-container">
-      <video id="video-player" controls></video>
+      <button id="playButton" onclick="startPlayback()">Play Stream</button>
+      <video id="video-player" controls style="display: none"></video>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
       const video = document.getElementById("video-player");
+      const playButton = document.getElementById("playButton");
 
-      // Extract the m3u8 URL directly from the query string
+      // Extract the m3u8 URL from the query string
       const urlParams = new URLSearchParams(window.location.search);
       const m3u8Url = urlParams.get("url");
 
@@ -56,30 +68,37 @@
         document.title = matchName;
       }
 
-      // Play the HLS stream if the URL is provided
-      if (m3u8Url) {
-        playStream(m3u8Url);
-      } else {
-        alert("No match link provided.");
+      // Function to start playback after user interaction
+      function startPlayback() {
+        playButton.style.display = "none"; // Hide play button after click
+        video.style.display = "block"; // Show the video player
+
+        if (m3u8Url) {
+          playStream(m3u8Url);
+        } else {
+          alert("No match link provided.");
+        }
       }
 
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
-            liveSyncDuration: 4, // Increased live sync duration
-            liveMaxLatencyDuration: 7, // Increased max latency allowed before playback adjusts
-            maxBufferLength: 30, // Further increased buffer length
-            maxBufferSize: 2 * 1024 * 1024, // Increased buffer size to handle more data
-            maxBufferHole: 0.5, // Tolerate small gaps
-            lowLatencyMode: false, // Disable low latency mode for smoother playback
-            backBufferLength: 60, // Set buffer length for memory management
-            maxLiveSyncPlaybackRate: 1.5, // Control playback rate to catch up with live
+            liveSyncDuration: 4,
+            liveMaxLatencyDuration: 7,
+            maxBufferLength: 30,
+            maxBufferSize: 2 * 1024 * 1024,
+            maxBufferHole: 0.5,
+            lowLatencyMode: false,
+            backBufferLength: 60,
+            maxLiveSyncPlaybackRate: 1.5,
           });
           hls.loadSource(url);
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play();
+            video.play().catch((error) => {
+              console.error("Playback error:", error);
+            });
           });
 
           hls.on(Hls.Events.ERROR, function (event, data) {
@@ -102,7 +121,9 @@
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
-            video.play();
+            video.play().catch((error) => {
+              console.error("Playback error:", error);
+            });
           });
         } else {
           alert("HLS is not supported in this browser.");
