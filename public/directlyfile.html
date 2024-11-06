@@ -37,7 +37,7 @@
   </head>
   <body>
     <div id="video-container">
-      <video id="video-player" controls muted autoplay></video>
+      <video id="video-player" controls autoplay></video>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -55,6 +55,22 @@
       if (matchName) {
         document.title = matchName;
       }
+
+      // Load volume and mute preferences on page load
+      const savedVolume = localStorage.getItem("videoVolume");
+      const savedMuteState = localStorage.getItem("videoMuted") === "true";
+
+      // Apply saved preferences if they exist
+      if (savedVolume !== null) {
+        video.volume = parseFloat(savedVolume);
+      }
+      video.muted = savedMuteState;
+
+      // Save preferences whenever they change
+      video.onvolumechange = () => {
+        localStorage.setItem("videoVolume", video.volume);
+        localStorage.setItem("videoMuted", video.muted);
+      };
 
       // Play the HLS stream if the URL is provided
       if (m3u8Url) {
