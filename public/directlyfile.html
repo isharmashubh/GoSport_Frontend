@@ -72,13 +72,7 @@
         localStorage.setItem("videoMuted", video.muted);
       };
 
-      // Play the HLS stream if the URL is provided
-      if (m3u8Url) {
-        playStream(m3u8Url);
-      } else {
-        alert("No match link provided.");
-      }
-
+      // Function to play the HLS stream
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
@@ -98,6 +92,38 @@
             video.play().catch((error) => {
               console.warn("Auto-play failed due to browser policy:", error);
             });
+          });
+
+          // Adjust quality based on internet speed
+          let qualitySwitchTimer;
+          hls.on(Hls.Events.BUFFER_STALLED, () => {
+            // Switch to 480p on buffering
+            if (qualitySwitchTimer) clearTimeout(qualitySwitchTimer);
+            qualitySwitchTimer = setTimeout(() => {
+              if (hls.levels.length > 1) {
+                const lowQualityLevel = hls.levels.findIndex(
+                  (level) => level.height === 480
+                );
+                if (lowQualityLevel >= 0) {
+                  hls.nextLevel = lowQualityLevel;
+                  console.log("Switching to 480p due to buffering...");
+                }
+              }
+            }, 1000); // 1 second delay to avoid rapid switching
+          });
+
+          hls.on(Hls.Events.FRAG_LOADED, () => {
+            // Switch back to 1080p on smooth playback
+            if (qualitySwitchTimer) clearTimeout(qualitySwitchTimer);
+            qualitySwitchTimer = setTimeout(() => {
+              const highQualityLevel = hls.levels.findIndex(
+                (level) => level.height === 1080
+              );
+              if (highQualityLevel >= 0) {
+                hls.nextLevel = highQualityLevel;
+                console.log("Switching to 1080p due to smooth playback...");
+              }
+            }, 5000); // 5 seconds delay for stable connection confirmation
           });
 
           hls.on(Hls.Events.ERROR, function (event, data) {
@@ -127,6 +153,13 @@
         } else {
           alert("HLS is not supported in this browser.");
         }
+      }
+
+      // Play the HLS stream if the URL is provided
+      if (m3u8Url) {
+        playStream(m3u8Url);
+      } else {
+        alert("No match link provided.");
       }
     </script>
   </body>
