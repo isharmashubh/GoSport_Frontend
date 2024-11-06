@@ -22,22 +22,22 @@
         width: 100%;
         height: 100%;
         display: flex;
-        align-items: center;
+        align-items: center; /* Center-align the video vertically */
         justify-content: center;
         padding-top: 10px;
       }
 
       #video-player {
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        background-color: black;
+        height: 100%; /* Ensure the video covers the container */
+        object-fit: contain; /* Ensure the entire video is visible without cropping */
+        background-color: black; /* Add a black background to fill any empty space */
       }
     </style>
   </head>
   <body>
     <div id="video-container">
-      <video id="video-player" controls autoplay></video>
+      <video id="video-player" controls></video>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -46,7 +46,7 @@
 
       // Extract the m3u8 URL directly from the query string
       const urlParams = new URLSearchParams(window.location.search);
-      let m3u8Url = urlParams.get("url");
+      const m3u8Url = urlParams.get("url");
 
       // Get the match name from localStorage
       const matchName = localStorage.getItem("currentMatchName");
@@ -55,22 +55,6 @@
       if (matchName) {
         document.title = matchName;
       }
-
-      // Load volume and mute preferences on page load
-      const savedVolume = localStorage.getItem("videoVolume");
-      const savedMuteState = localStorage.getItem("videoMuted") === "true";
-
-      // Apply saved preferences if they exist
-      if (savedVolume !== null) {
-        video.volume = parseFloat(savedVolume);
-      }
-      video.muted = savedMuteState;
-
-      // Save preferences whenever they change
-      video.onvolumechange = () => {
-        localStorage.setItem("videoVolume", video.volume);
-        localStorage.setItem("videoMuted", video.muted);
-      };
 
       // Play the HLS stream if the URL is provided
       if (m3u8Url) {
@@ -82,24 +66,20 @@
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
-            liveSyncDuration: 4,
-            liveMaxLatencyDuration: 7,
-            maxBufferLength: 30,
-            maxBufferSize: 2 * 1024 * 1024,
-            maxBufferHole: 0.5,
-            lowLatencyMode: false,
-            backBufferLength: 60,
-            maxLiveSyncPlaybackRate: 1.5,
+            liveSyncDuration: 4, // Increased live sync duration
+            liveMaxLatencyDuration: 7, // Increased max latency allowed before playback adjusts
+            maxBufferLength: 30, // Further increased buffer length
+            maxBufferSize: 2 * 1024 * 1024, // Increased buffer size to handle more data
+            maxBufferHole: 0.5, // Tolerate small gaps
+            lowLatencyMode: false, // Disable low latency mode for smoother playback
+            backBufferLength: 60, // Set buffer length for memory management
+            maxLiveSyncPlaybackRate: 1.5, // Control playback rate to catch up with live
           });
-
-          // Start with 1080p as the default
-          hls.loadSource(url.replace("480p.m3u8", "1080p.m3u8"));
+          hls.loadSource(url);
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play().catch((error) => {
-              console.warn("Auto-play failed due to browser policy:", error);
-            });
+            video.play();
           });
 
           hls.on(Hls.Events.ERROR, function (event, data) {
@@ -119,37 +99,13 @@
               }
             }
           });
-
-          // Keep checking and adjusting the stream quality after 1 minute
-          setInterval(() => {
-            adjustStreamQuality(hls);
-          }, 60000); // Check every 60 seconds (1 minute)
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
-            video.play().catch((error) => {
-              console.warn("Auto-play failed due to browser policy:", error);
-            });
+            video.play();
           });
         } else {
           alert("HLS is not supported in this browser.");
-        }
-      }
-
-      function adjustStreamQuality(hls) {
-        const bufferInfo = hls.bufferInfo;
-        const bufferLength = bufferInfo ? bufferInfo.len : 0;
-
-        // If the buffer length is small, switch to 480p after checking the buffer state for 1-2 minutes
-        if (bufferLength < 10 && !m3u8Url.includes("480p")) {
-          m3u8Url = m3u8Url.replace("1080p.m3u8", "480p.m3u8");
-          hls.loadSource(m3u8Url);
-        }
-
-        // If buffer length is sufficient, switch to 1080p again
-        else if (bufferLength >= 10 && m3u8Url.includes("480p")) {
-          m3u8Url = m3u8Url.replace("480p.m3u8", "1080p.m3u8");
-          hls.loadSource(m3u8Url);
         }
       }
     </script>
