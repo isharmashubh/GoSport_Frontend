@@ -33,30 +33,18 @@
         object-fit: contain;
         background-color: black;
       }
-
-      #playButton {
-        position: absolute;
-        background-color: #ffffff;
-        border: none;
-        padding: 15px;
-        font-size: 16px;
-        cursor: pointer;
-        z-index: 10;
-      }
     </style>
   </head>
   <body>
     <div id="video-container">
-      <button id="playButton" onclick="startPlayback()">Play Stream</button>
-      <video id="video-player" controls style="display: none"></video>
+      <video id="video-player" controls muted autoplay></video>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
       const video = document.getElementById("video-player");
-      const playButton = document.getElementById("playButton");
 
-      // Extract the m3u8 URL from the query string
+      // Extract the m3u8 URL directly from the query string
       const urlParams = new URLSearchParams(window.location.search);
       const m3u8Url = urlParams.get("url");
 
@@ -68,16 +56,11 @@
         document.title = matchName;
       }
 
-      // Function to start playback after user interaction
-      function startPlayback() {
-        playButton.style.display = "none"; // Hide play button after click
-        video.style.display = "block"; // Show the video player
-
-        if (m3u8Url) {
-          playStream(m3u8Url);
-        } else {
-          alert("No match link provided.");
-        }
+      // Play the HLS stream if the URL is provided
+      if (m3u8Url) {
+        playStream(m3u8Url);
+      } else {
+        alert("No match link provided.");
       }
 
       function playStream(url) {
@@ -97,7 +80,7 @@
 
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
             video.play().catch((error) => {
-              console.error("Playback error:", error);
+              console.warn("Auto-play failed due to browser policy:", error);
             });
           });
 
@@ -122,7 +105,7 @@
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
             video.play().catch((error) => {
-              console.error("Playback error:", error);
+              console.warn("Auto-play failed due to browser policy:", error);
             });
           });
         } else {
