@@ -73,16 +73,19 @@
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
-            liveSyncDuration: 3, // Decreased live sync duration for better sync
-            liveMaxLatencyDuration: 6, // Slightly increased latency for smoother playback
-            maxBufferLength: 10, // Further reduced buffer length for smoother playback
-            maxBufferSize: 512 * 1024, // Further reduced buffer size
-            maxBufferHole: 0.5, // Tolerate small gaps in buffer
-            lowLatencyMode: true, // Enabled low latency mode
-            backBufferLength: 30, // Lowered back buffer for mobile devices
-            maxLiveSyncPlaybackRate: 1.5, // Set playback rate for catching up with live
-            startLevel: -1, // Start with the best available quality
+            liveSyncDuration: 3,
+            liveMaxLatencyDuration: 4,
+            maxBufferLength: 20, // Allow more content to load ahead
+            maxBufferSize: 2 * 1024 * 1024, // Larger buffer for smoother playback
+            maxBufferHole: 1, // Tolerate a larger gap in the buffer
+            lowLatencyMode: true, // Keep low latency mode for live streams
+            backBufferLength: 30,
+            maxLiveSyncPlaybackRate: 1.5,
+            startLevel: -1,
+            highBufferWatchdogPeriod: 3, // Higher watchdog period
+            nudgeMaxRetry: 3, // Retry buffer recovery
           });
+
           hls.loadSource(url);
           hls.attachMedia(video);
 
