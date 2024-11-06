@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fancode for Free</title>
+
+    <!-- Cache control meta tags -->
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Cache-busted CSS link -->
     <style>
       /* Body styling */
       body {
@@ -17,7 +27,7 @@
         min-height: 100vh;
         background: linear-gradient(135deg, #1e3c72, #2a5298, #57c7d4);
         color: #fff;
-        padding: 0 10px; /* Added padding to the body */
+        padding: 0 10px;
       }
 
       h1 {
@@ -29,28 +39,26 @@
         text-align: center;
       }
 
-      /* Container for clickable images */
       .image-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px; /* Adjusted gap for better spacing */
+        gap: 20px;
         justify-content: center;
-        padding: 0; /* Removed padding for mobile */
-        width: 100%; /* Ensures full width */
+        padding: 0;
+        width: 100%;
       }
 
-      /* Card styling */
       .card {
         background-color: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         border-radius: 20px;
-        padding: 20px; /* Reduced padding */
+        padding: 20px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
         text-align: center;
-        width: 200px; /* Default width */
-        max-width: 90%; /* Ensures cards fit on smaller screens */
+        width: 200px;
+        max-width: 90%;
       }
 
       .card:hover {
@@ -58,9 +66,8 @@
         box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
       }
 
-      /* Image styling */
       .card img {
-        width: 100%; /* Make images responsive */
+        width: 100%;
         height: auto;
         margin-bottom: 15px;
         border-radius: 10px;
@@ -81,22 +88,22 @@
       /* Responsive Styles */
       @media (max-width: 600px) {
         h1 {
-          font-size: 2em; /* Smaller font size for mobile */
+          font-size: 2em;
         }
 
         .image-container {
-          flex-direction: column; /* Stack cards vertically on mobile */
-          align-items: center; /* Center align the cards */
+          flex-direction: column;
+          align-items: center;
         }
 
         .card {
-          width: 100%; /* Cards take full width on small screens */
-          max-width: none; /* Disable max-width for mobile */
-          padding: 15px; /* Adjust padding for smaller screens */
+          width: 100%;
+          max-width: none;
+          padding: 15px;
         }
 
         .card-title {
-          font-size: 1.2em; /* Smaller title for mobile */
+          font-size: 1.2em;
         }
       }
     </style>
@@ -118,9 +125,12 @@
       </div>
     </div>
 
+    <!-- JavaScript with cache-busting parameter -->
     <script>
+      // Redirect function to handle navigation
       function redirectTo(route) {
-        window.location.href = route;
+        // Cache-busting URL parameter for unique versioning on each reload
+        window.location.href = `${route}?v=${new Date().getTime()}`;
       }
     </script>
   </body>
