@@ -46,7 +46,7 @@
 
       // Extract the m3u8 URL directly from the query string
       const urlParams = new URLSearchParams(window.location.search);
-      const m3u8Url = urlParams.get("url");
+      let m3u8Url = urlParams.get("url");
 
       // Get the match name from localStorage
       const matchName = localStorage.getItem("currentMatchName");
@@ -72,7 +72,13 @@
         localStorage.setItem("videoMuted", video.muted);
       };
 
-      // Function to play the HLS stream
+      // Play the HLS stream if the URL is provided
+      if (m3u8Url) {
+        playStream(m3u8Url);
+      } else {
+        alert("No match link provided.");
+      }
+
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
@@ -85,6 +91,7 @@
             backBufferLength: 60,
             maxLiveSyncPlaybackRate: 1.5,
           });
+
           hls.loadSource(url);
           hls.attachMedia(video);
 
@@ -92,38 +99,6 @@
             video.play().catch((error) => {
               console.warn("Auto-play failed due to browser policy:", error);
             });
-          });
-
-          // Adjust quality based on internet speed
-          let qualitySwitchTimer;
-          hls.on(Hls.Events.BUFFER_STALLED, () => {
-            // Switch to 480p on buffering
-            if (qualitySwitchTimer) clearTimeout(qualitySwitchTimer);
-            qualitySwitchTimer = setTimeout(() => {
-              if (hls.levels.length > 1) {
-                const lowQualityLevel = hls.levels.findIndex(
-                  (level) => level.height === 480
-                );
-                if (lowQualityLevel >= 0) {
-                  hls.nextLevel = lowQualityLevel;
-                  console.log("Switching to 480p due to buffering...");
-                }
-              }
-            }, 1000); // 1 second delay to avoid rapid switching
-          });
-
-          hls.on(Hls.Events.FRAG_LOADED, () => {
-            // Switch back to 1080p on smooth playback
-            if (qualitySwitchTimer) clearTimeout(qualitySwitchTimer);
-            qualitySwitchTimer = setTimeout(() => {
-              const highQualityLevel = hls.levels.findIndex(
-                (level) => level.height === 1080
-              );
-              if (highQualityLevel >= 0) {
-                hls.nextLevel = highQualityLevel;
-                console.log("Switching to 1080p due to smooth playback...");
-              }
-            }, 5000); // 5 seconds delay for stable connection confirmation
           });
 
           hls.on(Hls.Events.ERROR, function (event, data) {
@@ -143,6 +118,11 @@
               }
             }
           });
+
+          // Keep checking and adjusting the stream quality
+          setInterval(() => {
+            adjustStreamQuality(hls);
+          }, 3000); // Check every 3 seconds
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
@@ -155,11 +135,22 @@
         }
       }
 
-      // Play the HLS stream if the URL is provided
-      if (m3u8Url) {
-        playStream(m3u8Url);
-      } else {
-        alert("No match link provided.");
+      function adjustStreamQuality(hls) {
+        // Check buffer length and adjust quality
+        const bufferInfo = hls.bufferInfo;
+        const bufferLength = bufferInfo ? bufferInfo.len : 0;
+
+        // If buffer length is small, switch to 480p
+        if (bufferLength < 10 && !m3u8Url.includes("480p")) {
+          m3u8Url = m3u8Url.replace("1080p.m3u8", "480p.m3u8");
+          hls.loadSource(m3u8Url);
+        }
+
+        // If buffer length is larger, switch to 1080p
+        else if (bufferLength >= 10 && m3u8Url.includes("480p")) {
+          m3u8Url = m3u8Url.replace("480p.m3u8", "1080p.m3u8");
+          hls.loadSource(m3u8Url);
+        }
       }
     </script>
   </body>
