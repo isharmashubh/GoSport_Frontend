@@ -92,7 +92,8 @@
             maxLiveSyncPlaybackRate: 1.5,
           });
 
-          hls.loadSource(url);
+          // Start with 1080p as the default
+          hls.loadSource(url.replace("480p.m3u8", "1080p.m3u8"));
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -119,10 +120,10 @@
             }
           });
 
-          // Keep checking and adjusting the stream quality
+          // Keep checking and adjusting the stream quality after 1 minute
           setInterval(() => {
             adjustStreamQuality(hls);
-          }, 3000); // Check every 3 seconds
+          }, 60000); // Check every 60 seconds (1 minute)
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
@@ -136,17 +137,16 @@
       }
 
       function adjustStreamQuality(hls) {
-        // Check buffer length and adjust quality
         const bufferInfo = hls.bufferInfo;
         const bufferLength = bufferInfo ? bufferInfo.len : 0;
 
-        // If buffer length is small, switch to 480p
+        // If the buffer length is small, switch to 480p after checking the buffer state for 1-2 minutes
         if (bufferLength < 10 && !m3u8Url.includes("480p")) {
           m3u8Url = m3u8Url.replace("1080p.m3u8", "480p.m3u8");
           hls.loadSource(m3u8Url);
         }
 
-        // If buffer length is larger, switch to 1080p
+        // If buffer length is sufficient, switch to 1080p again
         else if (bufferLength >= 10 && m3u8Url.includes("480p")) {
           m3u8Url = m3u8Url.replace("480p.m3u8", "1080p.m3u8");
           hls.loadSource(m3u8Url);
