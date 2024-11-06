@@ -16,15 +16,18 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        color: white;
+        font-family: Arial, sans-serif;
       }
 
       #video-container {
         width: 100%;
         height: 100%;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding-top: 10px;
+        position: relative;
       }
 
       #video-player {
@@ -33,16 +36,46 @@
         object-fit: contain;
         background-color: black;
       }
+
+      #live-button {
+        position: absolute;
+        bottom: 20px;
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0.8;
+      }
+
+      #live-button:hover {
+        opacity: 1;
+      }
+
+      #loading-message {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+      }
     </style>
   </head>
   <body>
     <div id="video-container">
+      <div id="loading-message">Loading...</div>
       <video id="video-player" controls></video>
+      <button id="live-button">Go Live</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
       const video = document.getElementById("video-player");
+      const liveButton = document.getElementById("live-button");
+      const loadingMessage = document.getElementById("loading-message");
 
       // Check if the page is being loaded for the first time (to avoid continuous reload)
       if (localStorage.getItem("hasLoaded")) {
@@ -80,10 +113,7 @@
             maxBufferHole: 1, // Tolerate a larger gap in the buffer
             lowLatencyMode: true, // Keep low latency mode for live streams
             backBufferLength: 30,
-            maxLiveSyncPlaybackRate: 1.5,
-            startLevel: -1,
             highBufferWatchdogPeriod: 3, // Higher watchdog period
-            nudgeMaxRetry: 3, // Retry buffer recovery
           });
 
           hls.loadSource(url);
@@ -91,6 +121,7 @@
 
           hls.on(Hls.Events.MANIFEST_PARSED, function () {
             video.play();
+            loadingMessage.style.display = "none"; // Hide loading message once the video starts
           });
 
           hls.on(Hls.Events.ERROR, function (event, data) {
@@ -117,11 +148,20 @@
           video.src = url;
           video.addEventListener("loadedmetadata", function () {
             video.play();
+            loadingMessage.style.display = "none"; // Hide loading message once the video starts
           });
         } else {
           alert("HLS is not supported in this browser.");
         }
       }
+
+      // Live button to jump to the live portion of the stream
+      liveButton.addEventListener("click", function () {
+        if (video) {
+          video.currentTime = video.duration; // Jump to the live point
+          video.play();
+        }
+      });
 
       // Prevent continuous reload by checking if the page has already loaded
       window.addEventListener("beforeunload", function () {
