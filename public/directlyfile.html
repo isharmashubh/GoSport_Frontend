@@ -66,16 +66,15 @@
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
-            liveSyncDuration: 5, // Set liveSyncDuration to a smaller value
-            liveMaxLatencyDuration: 15, // Set liveMaxLatencyDuration to a larger value
-            maxBufferLength: 30,
-            maxBufferSize: 2 * 1024 * 1024,
-            maxBufferHole: 0.5,
-            lowLatencyMode: false,
-            backBufferLength: 120,
-            maxLiveSyncPlaybackRate: 1.5,
+            liveSyncDuration: 6, // Increased live sync duration
+            liveMaxLatencyDuration: 7, // Increased max latency allowed before playback adjusts
+            maxBufferLength: 30, // Further increased buffer length
+            maxBufferSize: 2 * 1024 * 1024, // Increased buffer size to handle more data
+            maxBufferHole: 0.5, // Tolerate small gaps
+            lowLatencyMode: false, // Disable low latency mode for smoother playback
+            backBufferLength: 120, // Set buffer length for memory management
+            maxLiveSyncPlaybackRate: 1.5, // Control playback rate to catch up with live
           });
-
           hls.loadSource(url);
           hls.attachMedia(video);
 
