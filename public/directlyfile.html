@@ -44,6 +44,13 @@
     <script>
       const video = document.getElementById("video-player");
 
+      // Check if the page is being loaded for the first time (to avoid continuous reload)
+      if (localStorage.getItem("hasLoaded")) {
+        window.location.reload(); // Prevent the page from being loaded again
+      } else {
+        localStorage.setItem("hasLoaded", "true");
+      }
+
       // Extract the m3u8 URL directly from the query string
       const urlParams = new URLSearchParams(window.location.search);
       const m3u8Url = urlParams.get("url");
@@ -66,14 +73,14 @@
       function playStream(url) {
         if (Hls.isSupported()) {
           const hls = new Hls({
-            liveSyncDuration: 4, // Increased live sync duration
-            liveMaxLatencyDuration: 7, // Increased max latency allowed before playback adjusts
-            maxBufferLength: 30, // Further increased buffer length
-            maxBufferSize: 2 * 1024 * 1024, // Increased buffer size to handle more data
-            maxBufferHole: 0.5, // Tolerate small gaps
-            lowLatencyMode: false, // Disable low latency mode for smoother playback
-            backBufferLength: 60, // Set buffer length for memory management
-            maxLiveSyncPlaybackRate: 1.5, // Control playback rate to catch up with live
+            liveSyncDuration: 3, // Decreased live sync duration for better sync
+            liveMaxLatencyDuration: 5, // Decreased max latency for smoother playback
+            maxBufferLength: 15, // Reduced buffer length for smoother playback
+            maxBufferSize: 1 * 1024 * 1024, // Reduced buffer size
+            maxBufferHole: 0.5, // Tolerate small gaps in buffer
+            lowLatencyMode: false, // Disabled low latency mode for smoother experience
+            backBufferLength: 30, // Lowered back buffer for mobile devices
+            maxLiveSyncPlaybackRate: 1.5, // Set playback rate for catching up with live
           });
           hls.loadSource(url);
           hls.attachMedia(video);
@@ -108,6 +115,11 @@
           alert("HLS is not supported in this browser.");
         }
       }
+
+      // Prevent continuous reload by checking if the page has already loaded
+      window.addEventListener("beforeunload", function () {
+        localStorage.removeItem("hasLoaded"); // Reset after user leaves the page
+      });
     </script>
   </body>
 </html>
