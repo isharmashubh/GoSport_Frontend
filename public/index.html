@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fancode for Free</title>
+    <title>GoSport</title>
 
     <!-- Cache control meta tags -->
     <meta
@@ -13,10 +13,11 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
-    <!-- Cache-busted CSS link -->
+    <!-- Styles -->
     <style>
-      /* Body styling */
-      body {
+      /* Full page gradient animation */
+      body,
+      html {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
@@ -25,47 +26,64 @@
         align-items: center;
         flex-direction: column;
         min-height: 100vh;
-        background: linear-gradient(135deg, #1e3c72, #2a5298, #57c7d4);
+        overflow: hidden;
         color: #fff;
-        padding: 0 10px;
-      }
-
-      h1 {
-        color: #ffffff;
-        font-size: 2.5em;
-        margin-bottom: 40px;
-        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-        font-weight: 300;
+        background: linear-gradient(135deg, #1e3c72, #2a5298, #57c7d4);
+        background-size: 300% 300%;
+        animation: backgroundAnimation 15s ease infinite;
         text-align: center;
       }
 
+      /* GoSport Title Styling */
+      .title {
+        font-size: 2.8em;
+        margin-bottom: 20px;
+        color: #ffffff;
+        background: linear-gradient(90deg, #ff8a00, #e52e71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        font-weight: bold;
+      }
+
+      /* Subtitle question styling */
+      .subtitle {
+        font-size: 1.8em;
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-weight: 300;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Container for sports cards */
       .image-container {
         display: flex;
         flex-wrap: wrap;
         gap: 20px;
         justify-content: center;
-        padding: 0;
-        width: 100%;
       }
 
+      /* Card styling */
       .card {
-        background-color: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
         padding: 20px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        width: 180px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         cursor: pointer;
         text-align: center;
-        width: 200px;
         max-width: 90%;
       }
 
+      /* Hover effect on cards */
       .card:hover {
-        transform: translateY(-8px) scale(1.05) rotate(-1deg);
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+        transform: scale(1.05);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
       }
 
+      /* Card images styling */
       .card img {
         width: 100%;
         height: auto;
@@ -74,21 +92,37 @@
         transition: transform 0.3s ease;
       }
 
+      /* Image scale on hover */
       .card:hover img {
         transform: scale(1.1);
       }
 
+      /* Card title styling */
       .card-title {
-        color: #ffffff;
-        font-size: 1.4em;
-        margin-top: 8px;
+        font-size: 1.2em;
+        color: #fff;
         text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
       }
 
-      /* Responsive Styles */
+      /* Background animation */
+      @keyframes backgroundAnimation {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Responsive adjustments */
       @media (max-width: 600px) {
-        h1 {
+        .title {
           font-size: 2em;
+        }
+
+        .subtitle {
+          font-size: 1.4em;
         }
 
         .image-container {
@@ -98,18 +132,19 @@
 
         .card {
           width: 100%;
-          max-width: none;
           padding: 15px;
         }
 
         .card-title {
-          font-size: 1.2em;
+          font-size: 1.1em;
         }
       }
     </style>
   </head>
+
   <body>
-    <h1>What do you wanna watch?</h1>
+    <div class="title">GoSport</div>
+    <div class="subtitle">What do you wanna watch today?</div>
 
     <div class="image-container">
       <!-- Cricket Card -->
@@ -127,9 +162,7 @@
 
     <!-- JavaScript with cache-busting parameter -->
     <script>
-      // Redirect function to handle navigation
       function redirectTo(route) {
-        // Cache-busting URL parameter for unique versioning on each reload
         window.location.href = `${route}?v=${new Date().getTime()}`;
       }
     </script>
