@@ -76,16 +76,7 @@
 
       function playStream(url) {
         if (Hls.isSupported()) {
-          const hls = new Hls({
-            liveSyncDuration: 4,
-            liveMaxLatencyDuration: 7,
-            maxBufferLength: 30,
-            maxBufferSize: 2 * 1024 * 1024,
-            maxBufferHole: 0.5,
-            lowLatencyMode: false,
-            backBufferLength: 60,
-            maxLiveSyncPlaybackRate: 1.5,
-          });
+          const hls = new Hls();
           hls.loadSource(url);
           hls.attachMedia(video);
 
