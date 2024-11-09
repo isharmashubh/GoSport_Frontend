@@ -16,6 +16,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        position: relative;
       }
 
       #video-container {
@@ -33,6 +34,24 @@
         object-fit: contain;
         background-color: black;
       }
+
+      /* Styling for the live button */
+      #live-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      #live-button:hover {
+        background-color: #d32f2f;
+      }
     </style>
   </head>
   <body>
@@ -40,24 +59,17 @@
       <video id="video-player" controls></video>
     </div>
 
+    <!-- Live Button -->
+    <button id="live-button">Live</button>
+
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
       const video = document.getElementById("video-player");
+      const liveButton = document.getElementById("live-button");
 
       // Extract the m3u8 URL directly from the query string
       const urlParams = new URLSearchParams(window.location.search);
       let m3u8Url = urlParams.get("url");
-
-      // Check if the user is on a mobile device
-      function isMobile() {
-        return /Mobi|Android/i.test(navigator.userAgent);
-      }
-
-      // Modify the m3u8 URL if the user is on a mobile device
-      if (isMobile() && m3u8Url) {
-        // Replace '1080p' with '720p' in the m3u8 URL if it exists
-        m3u8Url = m3u8Url.replace("1080p.m3u8", "720p.m3u8");
-      }
 
       // Get the match name from localStorage
       const matchName = localStorage.getItem("currentMatchName");
@@ -110,6 +122,21 @@
           alert("HLS is not supported in this browser.");
         }
       }
+
+      // Seek to the latest point (live) when the "Live" button is clicked
+      liveButton.addEventListener("click", function () {
+        // Ensure that the video is playing and not paused
+        // Use a smoother approach to seek to the live point
+        // Seek 5 seconds behind the live point
+        let seekableEnd = video.seekable.end(0);
+        let currentTime = video.currentTime;
+
+        // Seek 5 seconds behind the current time (but not beyond the beginning of the stream)
+        if (currentTime + 5 < seekableEnd) video.currentTime = seekableEnd - 5;
+
+        // Ensure playback continues after seeking
+        video.play();
+      });
     </script>
   </body>
 </html>
